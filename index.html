@@ -72,7 +72,8 @@ async function sendMessage() {
   input.value = "";
   chatLog.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
 
-  // Simulate Lucien is "typing..."
+  // Simulate pause before typing
+  await sleep(1000); // 1 second pause BEFORE "Lucien is typing..."
   const typingMsgId = `typing-${Date.now()}`;
   chatLog.innerHTML += `<div id="${typingMsgId}"><em>Lucien is typing...</em></div>`;
   chatLog.scrollTop = chatLog.scrollHeight;
@@ -84,7 +85,8 @@ async function sendMessage() {
       body: JSON.stringify({ message })
     });
 
-    const reply = await response.text();
+    let reply = await response.text();
+    reply = reply.replace(/^["']|["']$/g, "").trim(); // Strip leading/trailing quotes
 
     // Wait 1.5–2.5 seconds before showing reply
     await sleep(Math.random() * 1000 + 1500);
